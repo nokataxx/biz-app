@@ -3,7 +3,7 @@ export type Users = {
   name: string;
   description: string;
   github_id: string;
-  giita_id: string;
+  qiita_id: string;
   x_id: string;
 };
 

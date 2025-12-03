@@ -4,6 +4,6 @@ export type Form = {
   description: string;
   skill_id: number;
   github_id: string;
-  giita_id: string;
+  qiita_id: string;
   x_id: string;
 };

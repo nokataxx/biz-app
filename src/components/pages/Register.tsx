@@ -14,7 +14,7 @@ export const Register: FC = memo(() => {
     description: "",
     skill_id: 0,
     github_id: "",
-    giita_id: "",
+    qiita_id: "",
     x_id: "",
   });
   const [skills, setSkills] = useState<{ label: string; value: string }[]>([]);
@@ -89,7 +89,7 @@ export const Register: FC = memo(() => {
         description: "",
         skill_id: 0,
         github_id: "",
-        giita_id: "",
+        qiita_id: "",
         x_id: "",
       });
       navigate("/");
@@ -204,11 +204,11 @@ export const Register: FC = memo(() => {
           </Field.Root>
           <Field.Root mb="4">
             <Field.Label fontSize="sm" color="gray.600">
-              Giita ID
+              Qiita ID
             </Field.Label>
             <Input
-              name="giita_id"
-              value={formData.giita_id}
+              name="qiita_id"
+              value={formData.qiita_id}
               onChange={handleChange}
             />
           </Field.Root>

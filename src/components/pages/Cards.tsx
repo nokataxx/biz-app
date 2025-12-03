@@ -50,7 +50,7 @@ export const Cards: FC = memo(() => {
           <HStack gap="12" mt="4">
             {userData?.github_id && (
               <a
-                href={`https://github.com/$userData.github_id}`}
+                href={`https://github.com/${userData.github_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -59,9 +59,9 @@ export const Cards: FC = memo(() => {
                 </Icon>
               </a>
             )}
-            {userData?.giita_id && (
+            {userData?.qiita_id && (
               <a
-                href={`https://qiita.com/${userData.giita_id}`}
+                href={`https://qiita.com/${userData.qiita_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
