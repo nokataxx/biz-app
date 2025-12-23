@@ -2,6 +2,7 @@ import { useCashFlow } from "@/hooks/useCashFlow";
 import { useAuth } from "@/hooks/useAuth";
 import { Card } from "../ui/card";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { NumericInput } from "@/components/ui/numeric-input";
 import { normalizeZero, getValueColorClass } from "@/utils/formatters";
 
@@ -28,6 +29,8 @@ export const CashFlowInput = () => {
     updateAppropriation,
     loading,
     error,
+    clearAllData,
+    clearKey,
   } = useCashFlow(userId);
 
   // 流動資産計
@@ -353,6 +356,13 @@ export const CashFlowInput = () => {
   const isCashFlowBalanced =
     cashIncrease === totalOperatingCF + totalInvestingCF + totalFinancingCF;
 
+  // クリア処理ハンドラー
+  const handleClear = () => {
+    if (window.confirm("全ての入力データをクリアします。よろしいですか?")) {
+      clearAllData();
+    }
+  };
+
   if (loading) {
     return (
       <Card className="p-6">
@@ -379,6 +389,13 @@ export const CashFlowInput = () => {
         <div className="ps-2">
           <h2 className="text-2xl font-bold">Cash Flow Statement</h2>
         </div>
+        <Button
+          variant="outline"
+          onClick={handleClear}
+          className="text-red-600 hover:text-red-700"
+        >
+          Clear All
+        </Button>
       </div>
       <div className="grid grid-cols-10 gap-4">
         <Card className="col-span-5 p-6 min-h-[800px] overflow-y-auto">
@@ -396,6 +413,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">現預金</Label>
                 <NumericInput
+                  key={`prev-cash-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.cash || undefined}
                   onValueChange={(value) =>
@@ -406,6 +424,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-cash-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.cash || undefined}
                   onValueChange={(value) =>
@@ -419,6 +438,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">売掛金＋受取手形</Label>
                 <NumericInput
+                  key={`prev-receivables-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.receivables || undefined}
                   onValueChange={(value) =>
@@ -429,6 +449,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-receivables-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.receivables || undefined}
                   onValueChange={(value) =>
@@ -442,6 +463,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">棚卸資産</Label>
                 <NumericInput
+                  key={`prev-inventory-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.inventory || undefined}
                   onValueChange={(value) =>
@@ -452,6 +474,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-inventory-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.inventory || undefined}
                   onValueChange={(value) =>
@@ -465,6 +488,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">有価証券</Label>
                 <NumericInput
+                  key={`prev-securities-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.securities || undefined}
                   onValueChange={(value) =>
@@ -475,6 +499,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-securities-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.securities || undefined}
                   onValueChange={(value) =>
@@ -488,6 +513,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">短期貸付金</Label>
                 <NumericInput
+                  key={`prev-shortTermLoss-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.shortTermLoans || undefined}
                   onValueChange={(value) =>
@@ -498,6 +524,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-shortTermLoss-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.shortTermLoans || undefined}
                   onValueChange={(value) =>
@@ -511,6 +538,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延税金資産</Label>
                 <NumericInput
+                  key={`prev-deferredTaxAssets-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.deferredTaxAssets || undefined}
                   onValueChange={(value) =>
@@ -521,6 +549,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-deferredTaxAssets-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.deferredTaxAssets || undefined}
                   onValueChange={(value) =>
@@ -537,6 +566,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">その他流動資産</Label>
                 <NumericInput
+                  key={`prev-otherCurrentAssets-${clearKey}`}
                   className="text-right"
                   value={currentAssets.prev.otherCurrentAssets || undefined}
                   onValueChange={(value) =>
@@ -547,6 +577,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-otherCurrentAssets-${clearKey}`}
                   className="text-right"
                   value={currentAssets.current.otherCurrentAssets || undefined}
                   onValueChange={(value) =>
@@ -579,6 +610,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">有形固定資産</Label>
                 <NumericInput
+                  key={`prev-tangibleAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.tangibleAssets || undefined}
                   onValueChange={(value) =>
@@ -589,6 +621,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-tangibleAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.tangibleAssets || undefined}
                   onValueChange={(value) =>
@@ -605,6 +638,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">無形固定資産</Label>
                 <NumericInput
+                  key={`prev-intangibleAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.intangibleAssets || undefined}
                   onValueChange={(value) =>
@@ -615,6 +649,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-intangibleAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.intangibleAssets || undefined}
                   onValueChange={(value) =>
@@ -631,6 +666,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">投資有価証券</Label>
                 <NumericInput
+                  key={`prev-investmentSecurities-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.investmentSecurities || undefined}
                   onValueChange={(value) =>
@@ -641,6 +677,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-investmentSecurities-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.investmentSecurities || undefined}
                   onValueChange={(value) =>
@@ -657,6 +694,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">長期貸付金</Label>
                 <NumericInput
+                  key={`prev-longTermLoans-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.longTermLoans || undefined}
                   onValueChange={(value) =>
@@ -667,6 +705,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-longTermLoans-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.longTermLoans || undefined}
                   onValueChange={(value) =>
@@ -683,6 +722,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延税金資産</Label>
                 <NumericInput
+                  key={`prev-deferredTaxAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.deferredTaxAssets || undefined}
                   onValueChange={(value) =>
@@ -693,6 +733,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-deferredTaxAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.deferredTaxAssets || undefined}
                   onValueChange={(value) =>
@@ -709,6 +750,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">その他固定資産</Label>
                 <NumericInput
+                  key={`prev-otherFixedAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.prev.otherFixedAssets || undefined}
                   onValueChange={(value) =>
@@ -719,6 +761,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-otherFixedAssets-${clearKey}`}
                   className="text-right"
                   value={fixedAssets.current.otherFixedAssets || undefined}
                   onValueChange={(value) =>
@@ -751,6 +794,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延資産</Label>
                 <NumericInput
+                  key={`prev-deferredAssets-${clearKey}`}
                   className="text-right"
                   value={deferredAssets.prev.deferredAssets || undefined}
                   onValueChange={(value) =>
@@ -761,6 +805,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-deferredAssets-${clearKey}`}
                   className="text-right"
                   value={deferredAssets.current.deferredAssets || undefined}
                   onValueChange={(value) =>
@@ -796,6 +841,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">買掛金＋支払手形</Label>
                 <NumericInput
+                  key={`prev-accountsPayable-${clearKey}`}
                   className="text-right"
                   value={currentLiabilities.prev.accountsPayable || undefined}
                   onValueChange={(value) =>
@@ -809,6 +855,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-accountsPayable-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.accountsPayable || undefined
@@ -827,6 +874,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">短期借入金</Label>
                 <NumericInput
+                  key={`prev-shortTermBorrowings-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.prev.shortTermBorrowings || undefined
@@ -842,6 +890,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-shortTermBorrowings-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.shortTermBorrowings || undefined
@@ -860,6 +909,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">未払法人税等</Label>
                 <NumericInput
+                  key={`prev-incomeTaxPayable-${clearKey}`}
                   className="text-right"
                   value={currentLiabilities.prev.incomeTaxPayable || undefined}
                   onValueChange={(value) =>
@@ -873,6 +923,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-incomeTaxPayable-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.incomeTaxPayable || undefined
@@ -891,6 +942,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延税金負債</Label>
                 <NumericInput
+                  key={`prev-deferredTaxLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.prev.deferredTaxLiabilities || undefined
@@ -906,6 +958,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-deferredTaxLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.deferredTaxLiabilities ||
@@ -925,6 +978,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">賞与引当金</Label>
                 <NumericInput
+                  key={`prev-bonusReserve-${clearKey}`}
                   className="text-right"
                   value={currentLiabilities.prev.bonusReserve || undefined}
                   onValueChange={(value) =>
@@ -938,6 +992,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-bonusReserve-${clearKey}`}
                   className="text-right"
                   value={currentLiabilities.current.bonusReserve || undefined}
                   onValueChange={(value) =>
@@ -954,6 +1009,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">退職給引当金</Label>
                 <NumericInput
+                  key={`prev-retirementBenefits1-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.prev.retirementBenefits || undefined
@@ -969,6 +1025,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-retirementBenefits1-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.retirementBenefits || undefined
@@ -987,6 +1044,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">その他流動負債</Label>
                 <NumericInput
+                  key={`prev-otherCurrentLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.prev.otherCurrentLiabilities || undefined
@@ -1002,6 +1060,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-otherCurrentLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     currentLiabilities.current.otherCurrentLiabilities ||
@@ -1037,6 +1096,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">長期借入金･社債</Label>
                 <NumericInput
+                  key={`prev-longTermBorrowings-${clearKey}`}
                   className="text-right"
                   value={fixedLiabilities.prev.longTermBorrowings || undefined}
                   onValueChange={(value) =>
@@ -1050,6 +1110,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-longTermBorrowings-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.current.longTermBorrowings || undefined
@@ -1068,6 +1129,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延税金負債</Label>
                 <NumericInput
+                  key={`prev-deferredTaxLiabilities2-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.prev.deferredTaxLiabilities || undefined
@@ -1083,6 +1145,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-deferredTaxLiabilities2-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.current.deferredTaxLiabilities || undefined
@@ -1101,6 +1164,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">退職給引当金</Label>
                 <NumericInput
+                  key={`prev-retirementBenefits2-${clearKey}`}
                   className="text-right"
                   value={fixedLiabilities.prev.retirementBenefits || undefined}
                   onValueChange={(value) =>
@@ -1114,6 +1178,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-retirementBenefits2-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.current.retirementBenefits || undefined
@@ -1132,6 +1197,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">その他固定負債</Label>
                 <NumericInput
+                  key={`prev-otherFixedLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.prev.otherFixedLiabilities || undefined
@@ -1147,6 +1213,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-otherFixedLiabilities-${clearKey}`}
                   className="text-right"
                   value={
                     fixedLiabilities.current.otherFixedLiabilities || undefined
@@ -1191,6 +1258,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">資本金･資本剰余金</Label>
                 <NumericInput
+                  key={`prev-capitalStock-${clearKey}`}
                   className="text-right"
                   value={equity.prev.capitalStock || undefined}
                   onValueChange={(value) =>
@@ -1204,6 +1272,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-capitalStock-${clearKey}`}
                   className="text-right"
                   value={equity.current.capitalStock || undefined}
                   onValueChange={(value) =>
@@ -1220,6 +1289,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">利益剰余金</Label>
                 <NumericInput
+                  key={`prev-retainedEarnings-${clearKey}`}
                   className="text-right"
                   value={equity.prev.retainedEarnings || undefined}
                   onValueChange={(value) =>
@@ -1233,6 +1303,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-retainedEarnings-${clearKey}`}
                   className="text-right"
                   value={equity.current.retainedEarnings || undefined}
                   onValueChange={(value) =>
@@ -1249,6 +1320,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="text-sm">繰延ヘッジ損益</Label>
                 <NumericInput
+                  key={`prev-treasuryStock-${clearKey}`}
                   className="text-right"
                   value={equity.prev.treasuryStock || undefined}
                   onValueChange={(value) =>
@@ -1262,6 +1334,7 @@ export const CashFlowInput = () => {
                   }
                 />
                 <NumericInput
+                  key={`current-treasuryStock-${clearKey}`}
                   className="text-right"
                   value={equity.current.treasuryStock || undefined}
                   onValueChange={(value) =>
@@ -1338,6 +1411,7 @@ export const CashFlowInput = () => {
                   (税引前) 当期純利益
                 </Label>
                 <NumericInput
+                  key={`pretaxIncome-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.pretaxIncome || undefined}
                   onValueChange={(value) =>
@@ -1353,6 +1427,7 @@ export const CashFlowInput = () => {
                   (税引後) 当期純利益
                 </Label>
                 <NumericInput
+                  key={`netIncome-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.netIncome || undefined}
                   onValueChange={(value) =>
@@ -1368,6 +1443,7 @@ export const CashFlowInput = () => {
                   減価償却費 (販管費＋製造原価等)
                 </Label>
                 <NumericInput
+                  key={`depreciation-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.depreciation || undefined}
                   onValueChange={(value) =>
@@ -1381,6 +1457,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="col-span-2 text-sm">受取利息･配当金</Label>
                 <NumericInput
+                  key={`interestIncome-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.interestIncome || undefined}
                   onValueChange={(value) =>
@@ -1394,6 +1471,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="col-span-2 text-sm">支払利息</Label>
                 <NumericInput
+                  key={`interestExpense-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.interestExpense || undefined}
                   onValueChange={(value) =>
@@ -1407,6 +1485,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="col-span-2 text-sm">有価証券売却益</Label>
                 <NumericInput
+                  key={`securitiesGain-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.securitiesGain || undefined}
                   onValueChange={(value) =>
@@ -1422,6 +1501,7 @@ export const CashFlowInput = () => {
                   有価証券売却損･評価損
                 </Label>
                 <NumericInput
+                  key={`securitiesLoss-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.securitiesLoss || undefined}
                   onValueChange={(value) =>
@@ -1435,6 +1515,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="col-span-2 text-sm">固定資産売却益</Label>
                 <NumericInput
+                  key={`fixedAssetGain-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.fixedAssetGain || undefined}
                   onValueChange={(value) =>
@@ -1450,6 +1531,7 @@ export const CashFlowInput = () => {
                   固定資産売却損･廃棄損
                 </Label>
                 <NumericInput
+                  key={`fixedAssetLoss-${clearKey}`}
                   className="col-start-3 text-right"
                   value={incomeStatement.fixedAssetLoss || undefined}
                   onValueChange={(value) =>
@@ -1469,6 +1551,7 @@ export const CashFlowInput = () => {
               <div className="grid grid-cols-3 gap-4 items-center ps-2">
                 <Label className="col-span-2 text-sm">配当金の当期支出額</Label>
                 <NumericInput
+                  key={`dividends-${clearKey}`}
                   className="col-start-3 text-right"
                   value={appropriation.dividends || undefined}
                   onValueChange={(value) =>
@@ -1484,6 +1567,7 @@ export const CashFlowInput = () => {
                   役員賞与の当期支出額
                 </Label>
                 <NumericInput
+                  key={`executiveBonuses-${clearKey}`}
                   className="col-start-3 text-right"
                   value={appropriation.executiveBonuses || undefined}
                   onValueChange={(value) =>

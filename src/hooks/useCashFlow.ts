@@ -2,35 +2,111 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { type FinancialData } from "@/types/cashflow";
 
-const getDefaultFinancialData = (): FinancialData =>
-  ({
-    currentAssets: {
-      prev: {},
-      current: {},
+const getDefaultFinancialData = (): FinancialData => ({
+  currentAssets: {
+    prev: {
+      cash: 0,
+      receivables: 0,
+      inventory: 0,
+      securities: 0,
+      shortTermLoans: 0,
+      deferredTaxAssets: 0,
+      otherCurrentAssets: 0,
     },
-    fixedAssets: {
-      prev: {},
-      current: {},
+    current: {
+      cash: 0,
+      receivables: 0,
+      inventory: 0,
+      securities: 0,
+      shortTermLoans: 0,
+      deferredTaxAssets: 0,
+      otherCurrentAssets: 0,
     },
-    deferredAssets: {
-      prev: {},
-      current: {},
+  },
+  fixedAssets: {
+    prev: {
+      tangibleAssets: 0,
+      intangibleAssets: 0,
+      investmentSecurities: 0,
+      longTermLoans: 0,
+      deferredTaxAssets: 0,
+      otherFixedAssets: 0,
     },
-    currentLiabilities: {
-      prev: {},
-      current: {},
+    current: {
+      tangibleAssets: 0,
+      intangibleAssets: 0,
+      investmentSecurities: 0,
+      longTermLoans: 0,
+      deferredTaxAssets: 0,
+      otherFixedAssets: 0,
     },
-    fixedLiabilities: {
-      prev: {},
-      current: {},
+  },
+  deferredAssets: {
+    prev: { deferredAssets: 0 },
+    current: { deferredAssets: 0 },
+  },
+  currentLiabilities: {
+    prev: {
+      accountsPayable: 0,
+      shortTermBorrowings: 0,
+      incomeTaxPayable: 0,
+      deferredTaxLiabilities: 0,
+      bonusReserve: 0,
+      retirementBenefits: 0,
+      otherCurrentLiabilities: 0,
     },
-    equity: {
-      prev: {},
-      current: {},
+    current: {
+      accountsPayable: 0,
+      shortTermBorrowings: 0,
+      incomeTaxPayable: 0,
+      deferredTaxLiabilities: 0,
+      bonusReserve: 0,
+      retirementBenefits: 0,
+      otherCurrentLiabilities: 0,
     },
-    incomeStatement: {},
-    appropriation: {},
-  } as FinancialData);
+  },
+  fixedLiabilities: {
+    prev: {
+      longTermBorrowings: 0,
+      deferredTaxLiabilities: 0,
+      retirementBenefits: 0,
+      otherFixedLiabilities: 0,
+    },
+    current: {
+      longTermBorrowings: 0,
+      deferredTaxLiabilities: 0,
+      retirementBenefits: 0,
+      otherFixedLiabilities: 0,
+    },
+  },
+  equity: {
+    prev: {
+      capitalStock: 0,
+      retainedEarnings: 0,
+      treasuryStock: 0,
+    },
+    current: {
+      capitalStock: 0,
+      retainedEarnings: 0,
+      treasuryStock: 0,
+    },
+  },
+  incomeStatement: {
+    pretaxIncome: 0,
+    netIncome: 0,
+    depreciation: 0,
+    interestIncome: 0,
+    interestExpense: 0,
+    securitiesGain: 0,
+    securitiesLoss: 0,
+    fixedAssetGain: 0,
+    fixedAssetLoss: 0,
+  },
+  appropriation: {
+    dividends: 0,
+    executiveBonuses: 0,
+  },
+});
 
 export const useCashFlow = (userId?: string) => {
   const [financialData, setFinancialData] = useState<FinancialData>(
@@ -43,9 +119,10 @@ export const useCashFlow = (userId?: string) => {
     fiscalYear?: string;
   }>({});
 
+  const [clearKey, setClearKey] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
 
   // データ読み込み
   useEffect(() => {
@@ -243,9 +320,9 @@ export const useCashFlow = (userId?: string) => {
 
         if (updateError) throw updateError;
 
-        setFinancialData(updatedData);
-        if (companyName) setMetadata((prev) => ({ ...prev, companyName }));
-        if (fiscalYear) setMetadata((prev) => ({ ...prev, fiscalYear }));
+        // setFinancialData(updatedData);
+        // if (companyName) setMetadata((prev) => ({ ...prev, companyName }));
+        // if (fiscalYear) setMetadata((prev) => ({ ...prev, fiscalYear }));
 
         return recordId;
       } catch (err) {
@@ -275,6 +352,23 @@ export const useCashFlow = (userId?: string) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [financialData, loading, metadata.id]);
 
+  // 入力項目のクリア
+
+  const clearAllData = useCallback(async () => {
+    const defaultData = getDefaultFinancialData();
+
+    setFinancialData(defaultData);
+    setClearKey((prev) => prev + 1);
+
+    if (metadata.id) {
+      try {
+        await saveData(defaultData);
+      } catch (err) {
+        console.error("Failed to clear data on server:", err);
+      }
+    }
+  }, [metadata.id, saveData]);
+
   return {
     // 各セクションのデータ
     currentAssets: financialData.currentAssets,
@@ -298,9 +392,13 @@ export const useCashFlow = (userId?: string) => {
 
     // メタデータと状態
     metadata,
+    isSaving,
     loading,
     error,
-    isSaving,
     saveData,
+
+    // 入力項目クリア
+    clearKey,
+    clearAllData,
   };
 };
