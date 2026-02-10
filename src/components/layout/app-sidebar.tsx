@@ -6,7 +6,6 @@ import {
   Command,
   House,
   IdCard,
-  Frame,
   GalleryVerticalEnd,
   Map,
   PieChart,
@@ -148,12 +147,7 @@ const data = {
       url: "bizcards",
       icon: IdCard,
     },
-    {
-      name: "Cash Flow Statement",
-      url: "cashflow",
-      icon: Frame,
-    },
-    {
+{
       name: "Sales & Marketing",
       url: "#",
       icon: PieChart,
